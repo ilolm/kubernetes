@@ -21,17 +21,22 @@ FROM $BASEIMAGE
 CROSS_BUILD_COPY qemu-QEMUARCH-static /usr/bin/
 
 # Base Packages
-RUN yum install -y wget strace psmisc procps-ng ceph ceph-fuse hostname && yum clean all
+RUN yum install -y \
+        wget \
+        strace \
+        psmisc \
+        procps-ng \
+        ceph \
+        ceph-fuse \
+        hostname \
+        && \
+    yum clean all
+
+COPY ["./bootstrap.sh", "./mon.sh", "./mds.sh", "./osd.sh", "./ceph.conf.sh", "/"]
+COPY ./keyring /var/lib/ceph/mon/keyring
+ADD ./block.tar.gz /
 
 # Get ports exposed
 EXPOSE 6789
 
-ADD ./bootstrap.sh /bootstrap.sh
-ADD ./mon.sh /mon.sh
-ADD ./mds.sh /mds.sh
-ADD ./osd.sh /osd.sh
-ADD ./ceph.conf.sh /ceph.conf.sh
-ADD ./keyring /var/lib/ceph/mon/keyring
-ADD ./block.tar.gz /
-
-CMD /bootstrap.sh
+CMD ["/bin/bash", "/bootstrap.sh"]
