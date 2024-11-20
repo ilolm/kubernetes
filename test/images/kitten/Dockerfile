@@ -14,6 +14,7 @@
 
 ARG BASEIMAGE
 FROM $BASEIMAGE
-COPY html/kitten.jpg kitten.jpg
-COPY html/data.json data.json
+
+COPY ["html/kitten.jpg", "html/data.json", "./"]
+
 CMD ["test-webserver"]
